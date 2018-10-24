@@ -1,0 +1,22 @@
+{
+  "name": "profilepage",
+  "version": "1.0.0",
+  "description": "my profile page",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/georgianabratucu/webTech-profile.git"
+  },
+  "author": "georgianabratucu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/georgianabratucu/webTech-profile/issues"
+  },
+  "homepage": "https://github.com/georgianabratucu/webTech-profile#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
