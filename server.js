@@ -1,7 +1,32 @@
 const express = require("express")
+const Sequelize = require("sequelize")
 
 const app = express()
 
+//param- database,user,parola,obiect cu alte proprietati
+const sequelize = new Sequelize('profile','root','',{
+    dialect:'mysql',
+    host:'localhost'
+})
+sequelize.authenticate().then(function(){
+    console.log('success')
+}).catch(function(){
+    console.log('o eroare la conectarea la bd')
+})
+
+const Messages = sequelize.define('messages',{
+    name:Sequelize.STRING,
+    subject:Sequelize.STRING,
+    message:Sequelize.TEXT
+})
+
+app.get('/createdb',function(request,response){
+    sequelize.sync({force:true}).then(function(){
+        response.status(200).send('tables created')
+    }).catch(function(){
+        response.status(200).send('could not create database')
+    })
+})
 app.use('/',express.static('statics'))
 
 app.get('/hello',function(request,response){
@@ -25,18 +50,9 @@ let messages = [
     ]
 
 app.get('/messages',(request,response)=>{
-    if(request.query.search!=undefined){
-        let filteredMessage=[];
-        for(var i = 0;i<messages.length;i++){
-            if(messages[i].message.includes(request.query.search)){
-                filteredMessage.push(messages[i]);
-            }
-        }
-        response.status(200).json(filteredMessage);
-    }else{
-        response.status(200).json(messages);
-        
-    }
+    Messages.findAll().then((messages)=>{
+        response.status(200).json(messages)
+    })
    
     
 })
@@ -44,10 +60,16 @@ app.get('/messages',(request,response)=>{
 app.get('/messages/:id',(request,response)=>{
     response.status(200).send('not implemented')
 })
-
+//middleware pt a citi json body
+app.use(express.json())
+app.use(express.urlencoded())
 
 app.post('/messages',(request,response)=>{
-    response.status(200).send('not implemented')
+    Messages.create(request.body).then((message)=>{
+    response.status(201).json(message)
+        
+    })
+   
 })
 
 app.put('messages/:id',(request,response)=>{
